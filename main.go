@@ -37,7 +37,27 @@ func getPoints(fileIn string) ([]Point, int) {
 			max = x[i].p2depth
 		}
 	}
-	return x, max + 1
+	var points []Point
+	for _, point := range x {
+		matched := false
+		for i, p := range points {
+			if point.p1depth == p.p1depth && point.p2depth == p.p2depth {
+				points[i] = Point{
+					p1depth: p.p1depth,
+					p2depth: p.p2depth,
+					p1wins:  point.p1wins + p.p1wins,
+					p2wins:  point.p2wins + p.p2wins,
+					ties:    point.ties + p.ties,
+				}
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			points = append(points, point)
+		}
+	}
+	return points, max + 1
 }
 
 func makeGraph(title, fileIn, fileOut string, ch chan int) {
@@ -81,7 +101,6 @@ func makeGraph(title, fileIn, fileOut string, ch chan int) {
 	dc.SetRGB(0, 0, 0)
 
 	dc.DrawStringAnchored(title+" - Alphabeta vs. Alphabeta", S/2, P/2, 0.5, 0.5)
-
 
 	dc.DrawStringAnchored("Player 1 Lookahead", S/2, S-P/2, 0.5, 0.5)
 	dc.RotateAbout(-1.5708, S/2, S/2)
