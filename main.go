@@ -71,7 +71,8 @@ func makeGraph(title, fileIn, fileOut string, ch chan int) {
 	dc.Stroke()
 
 	for _, point := range points {
-		dc.SetRGBA(float64(point.p1wins)/100, float64(point.p2wins)/100, float64(point.ties)/100, 1)
+		totalGames := float64(point.p1wins + point.p2wins + point.ties)
+		dc.SetRGBA(float64(point.p1wins)/totalGames, float64(point.p2wins)/totalGames, float64(point.ties)/totalGames, 1)
 		dc.DrawRectangle(float64(point.p1depth)/float64(maxWidth), float64(point.p2depth)/float64(maxWidth), 1.0/float64(maxWidth), 1.0/float64(maxWidth))
 		dc.Fill()
 	}
@@ -79,23 +80,14 @@ func makeGraph(title, fileIn, fileOut string, ch chan int) {
 	dc.Identity()
 	dc.SetRGB(0, 0, 0)
 
-	if err := dc.LoadFontFace("/Library/Fonts/Arial Bold.ttf", 24); err != nil {
-		panic(err)
-	}
 	dc.DrawStringAnchored(title+" - Alphabeta vs. Alphabeta", S/2, P/2, 0.5, 0.5)
 
-	if err := dc.LoadFontFace("/Library/Fonts/Arial.ttf", 18); err != nil {
-		panic(err)
-	}
 
 	dc.DrawStringAnchored("Player 1 Lookahead", S/2, S-P/2, 0.5, 0.5)
 	dc.RotateAbout(-1.5708, S/2, S/2)
 	dc.DrawStringAnchored("Player 2 Lookahead", S/2, P/2, 0.5, 0.5)
 
 	dc.Identity()
-	if err := dc.LoadFontFace("/Library/Fonts/Arial.ttf", 16); err != nil {
-		panic(err)
-	}
 	dc.DrawStringAnchored("0", P, S-(P-10), 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(maxWidth/4), (P+S/2)/2, S-(P-10), 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(maxWidth/2), S/2, S-(P-10), 0.5, 0.5)
@@ -109,15 +101,9 @@ func makeGraph(title, fileIn, fileOut string, ch chan int) {
 	dc.DrawStringAnchored(strconv.Itoa(maxWidth), S-P, P-10, 0.5, 0.5)
 
 	dc.Identity()
-	if err := dc.LoadFontFace("/Library/Fonts/Arial Bold.ttf", 20); err != nil {
-		panic(err)
-	}
 
 	dc.Translate(S, 0)
 	dc.DrawStringAnchored("Legend", 25, 100, 0.5, 0.5)
-	if err := dc.LoadFontFace("/Library/Fonts/Arial.ttf", 16); err != nil {
-		panic(err)
-	}
 	dc.SetRGB(1, 0, 0)
 	dc.DrawRectangle(10, 150, 30, 30)
 	dc.Fill()
